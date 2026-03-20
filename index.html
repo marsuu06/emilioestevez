@@ -1,1 +1,770 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dossier RP — Emilio Estévez</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Oswald:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #7b2fbe;
+    --red-dark: #4a1080;
+    --red-glow: #a855f7;
+    --black: #08060f;
+    --grey-dark: #0e0b18;
+    --grey-mid: #160f28;
+    --grey-light: #231840;
+    --text: #cfc8e0;
+    --text-dim: #6e647a;
+    --accent: #e0aaff;
+  }
 
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--black);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.35;
+  }
+
+  /* SCANLINES */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 998;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 60px 60px;
+    overflow: hidden;
+  }
+
+  .bg-stripes {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(135deg, var(--red-dark) 0%, transparent 50%),
+      linear-gradient(to bottom, #06040e 0%, #08060f 100%);
+    z-index: 0;
+  }
+
+  .bg-stripes::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 40px,
+      rgba(192,57,43,0.04) 40px,
+      rgba(192,57,43,0.04) 80px
+    );
+  }
+
+  .tag-top {
+    position: absolute;
+    top: 40px;
+    left: 60px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    z-index: 2;
+    animation: fadeIn 1s ease forwards;
+  }
+
+  .tag-top span {
+    color: var(--red-glow);
+  }
+
+  .dossier-number {
+    position: absolute;
+    top: 40px;
+    right: 60px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 6px;
+    color: var(--text-dim);
+    z-index: 2;
+    animation: fadeIn 1.2s ease forwards;
+  }
+
+  /* BIG VERTICAL NAME */
+  .name-vertical {
+    position: absolute;
+    right: 60px;
+    bottom: 60px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 180px;
+    line-height: 1;
+    color: rgba(192,57,43,0.08);
+    letter-spacing: -8px;
+    z-index: 1;
+    user-select: none;
+    animation: slideUp 1.5s ease forwards;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: var(--red-glow);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    animation: fadeIn 0.8s ease forwards;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 12vw, 160px);
+    line-height: 0.9;
+    letter-spacing: 2px;
+    color: #fff;
+    animation: slideUp 1s ease forwards;
+    text-shadow: 0 0 80px rgba(192,57,43,0.3);
+  }
+
+  h1 .surname {
+    display: block;
+    color: var(--red-glow);
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 40px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    animation: fadeIn 1.4s ease forwards;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .meta-label {
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .meta-value {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: 1px;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+    animation: bounce 2s infinite;
+  }
+
+  .scroll-hint span {
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .scroll-hint::after {
+    content: '';
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--red), transparent);
+  }
+
+  /* MAIN CONTENT */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 40px 120px;
+  }
+
+  /* SECTION */
+  section {
+    margin-bottom: 80px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+
+  .section-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 60px;
+    color: var(--red-dark);
+    line-height: 1;
+    min-width: 60px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 4px;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--red-dark), transparent);
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--grey-mid);
+    border-left: 3px solid var(--red-dark);
+    padding: 28px 32px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, var(--red-dark), transparent);
+  }
+
+  .card p {
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--text);
+  }
+
+  .card-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--red-glow);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* TRAITS GRID */
+  .traits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .trait-card {
+    background: var(--grey-mid);
+    border: 1px solid var(--grey-light);
+    border-top: 2px solid var(--red-dark);
+    padding: 24px;
+    position: relative;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .trait-card:hover {
+    border-color: var(--red-glow);
+    transform: translateY(-4px);
+  }
+
+  .trait-icon {
+    font-size: 26px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .trait-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .trait-desc {
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+
+  /* OBJECTIFS */
+  .obj-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .obj-item {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    padding: 20px 24px;
+    background: var(--grey-mid);
+    border-left: 3px solid var(--grey-light);
+    transition: border-color 0.3s;
+  }
+
+  .obj-item:hover {
+    border-color: var(--red-glow);
+  }
+
+  .obj-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--red-dark);
+    line-height: 1;
+    min-width: 36px;
+  }
+
+  .obj-text {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--text);
+    padding-top: 6px;
+  }
+
+  /* MEDIC WARNING BOX */
+  .warning-box {
+    border: 1px solid var(--red-dark);
+    background: rgba(192,57,43,0.06);
+    padding: 28px 32px;
+    position: relative;
+    margin-top: 20px;
+  }
+
+  .warning-box::before {
+    content: '⚠ AVERTISSEMENT MÉDICAL';
+    position: absolute;
+    top: -10px;
+    left: 24px;
+    background: var(--black);
+    padding: 0 12px;
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--red-glow);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .warning-box p {
+    font-size: 12px;
+    line-height: 1.9;
+    color: var(--text);
+  }
+
+  /* TONALITÉ */
+  .tonal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .tonal-tag {
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border: 1px solid var(--red-dark);
+    color: var(--red-glow);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .tonal-tag:hover {
+    background: var(--red-dark);
+    color: #fff;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--grey-light);
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 4px;
+    color: var(--red-dark);
+  }
+
+  .footer-info {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--red-dark), transparent);
+    margin: 60px 0;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* STATUS BAR */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: rgba(192,57,43,0.1);
+    border: 1px solid rgba(192,57,43,0.3);
+    margin-bottom: 16px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--red-glow);
+    font-family: 'Oswald', monospace;
+    text-transform: uppercase;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--red-glow);
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .redacted {
+    background: var(--text-dim);
+    color: transparent;
+    user-select: none;
+    border-radius: 2px;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 0 24px 48px; }
+    .tag-top, .dossier-number { left: 24px; right: 24px; }
+    .name-vertical { font-size: 100px; }
+    main { padding: 60px 24px 80px; }
+    footer { padding: 32px 24px; flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER HERO -->
+<header>
+  <div class="bg-stripes"></div>
+
+  <div class="tag-top">
+    GTA RP — <span>Los Santos City</span> // Dossier personnage
+  </div>
+  <div class="dossier-number">FILE #0047-LS</div>
+
+  <div class="name-vertical">ESTÉVEZ</div>
+
+  <div class="hero-content">
+    <div class="hero-label">// Dossier confidentiel — Personnage actif</div>
+    <h1>
+      EMILIO
+      <span class="surname">ESTÉVEZ</span>
+    </h1>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Âge</span>
+        <span class="meta-value">23 ans</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Origine</span>
+        <span class="meta-value">Mexico City</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Localisation</span>
+        <span class="meta-value">Los Santos</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Affiliation</span>
+        <span class="meta-value">Hooligans LS</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Statut</span>
+        <span class="meta-value" style="color:var(--red-glow)">● Actif</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint"><span>Défiler</span></div>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- SECTION 1 — ORIGINES -->
+  <section id="s1">
+    <div class="section-header">
+      <span class="section-number">01</span>
+      <h2 class="section-title">Origines</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">// Contexte — Mexico City</div>
+      <p>
+        Né dans les quartiers les plus durs de Mexico City, Emilio Estévez n'a jamais connu autre chose que la rue. Dès son plus jeune âge, la survie dictait chaque décision : mentir, se battre, s'adapter ou disparaître. Il n'a pas eu d'enfance — il a eu une formation brutale à la réalité.
+      </p>
+    </div>
+    <div class="card">
+      <div class="card-title">// Recrutement MS-13 — 13 ans</div>
+      <p>
+        À 13 ans, la MS-13 le repère. Emilio ne cherche pas le gang — c'est le gang qui le choisit. Rapidement exposé à une violence systématique, il développe une tolérance anormale à la douleur et une fascination malsaine pour le sang. Le chaos devient sa zone de confort.
+      </p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 2 — SANTÉ MENTALE -->
+  <section id="s2">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <h2 class="section-title">Profil Médical</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="status-bar">
+      <div class="status-dot"></div>
+      Schizophrénie diagnostiquée — Traitement en cours
+    </div>
+
+    <div class="card">
+      <div class="card-title">// Diagnostic</div>
+      <p>
+        Emilio souffre de schizophrénie, stabilisée par un traitement médicamenteux strict. Lorsqu'il respecte ses prises à l'heure, il peut fonctionner normalement, interagir, raisonner, contrôler ses impulsions. Sa maladie est sous contrôle — fragile mais réel.
+      </p>
+    </div>
+
+    <div class="warning-box">
+      <p>
+        Tout écart dans son traitement entraîne une décompensation rapide. Emilio devient imprévisible, dangereux, incapable de distinguer la menace réelle de la perception. Son comportement bascule sans prévenir. Les personnes proches doivent surveiller ses signes d'alerte : agitation excessive, regard vide, discours fragmenté.
+      </p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 3 — MIGRATION -->
+  <section id="s3">
+    <div class="section-header">
+      <span class="section-number">03</span>
+      <h2 class="section-title">Arrivée à Los Santos</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">// L'oncle — Seconde chance</div>
+      <p>
+        Son oncle, établi à Los Santos depuis des années, apprend l'état réel d'Emilio au Mexique. Il l'arrache à l'enfer — non sans mal — et lui offre un billet simple pour Los Santos. Une ville inconnue. Une nouvelle vie. Ou du moins, une chance d'en avoir une.
+      </p>
+    </div>
+    <div class="card">
+      <div class="card-title">// Intégration — Groupe de Hooligans</div>
+      <p>
+        À Los Santos, Emilio ne trouve pas la paix — il trouve les hooligans. Un groupe qui ne pose pas de questions, qui vit dans l'adrénaline et le chaos des tribunes et des rues. Il n'est pas fan de football. Mais il est fan de ce que ce groupe représente : appartenance sans condition, violence acceptée, hiérarchie simple. C'est assez.
+      </p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 4 — TRAITS -->
+  <section id="s4">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <h2 class="section-title">Caractère</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="traits-grid">
+      <div class="trait-card">
+        <span class="trait-icon">🔪</span>
+        <div class="trait-name">Instable</div>
+        <div class="trait-desc">Son état mental fluctue. Calme un jour, bombe à retardement le lendemain. Impossible à prédire sans connaître son traitement.</div>
+      </div>
+      <div class="trait-card">
+        <span class="trait-icon">🩸</span>
+        <div class="trait-name">Fascination morbide</div>
+        <div class="trait-desc">Attrait sincère pour la violence et le sang. Pas de sadisme calculé — une attraction viscérale, presque sensorielle.</div>
+      </div>
+      <div class="trait-card">
+        <span class="trait-icon">🤝</span>
+        <div class="trait-name">Loyal</div>
+        <div class="trait-desc">Fidèle jusqu'à l'excès envers ceux qu'il considère comme les siens. La trahison est pour lui une peine capitale.</div>
+      </div>
+      <div class="trait-card">
+        <span class="trait-icon">💊</span>
+        <div class="trait-name">Discipline médicale</div>
+        <div class="trait-desc">Quand il prend son traitement, il est presque ordinaire. Ce contrôle fragile est sa seule ligne de vie dans la ville.</div>
+      </div>
+      <div class="trait-card">
+        <span class="trait-icon">⚡</span>
+        <div class="trait-name">Audacieux</div>
+        <div class="trait-desc">N'hésite jamais. Agit avant de réfléchir. L'hésitation lui paraît une faiblesse — les hésitants meurent dans les rues où il a grandi.</div>
+      </div>
+      <div class="trait-card">
+        <span class="trait-icon">🧠</span>
+        <div class="trait-name">Réfléchi (sous traitement)</div>
+        <div class="trait-desc">Capable d'analyse et de stratégie lorsque stabilisé. Un contraste saisissant avec sa version non-médicamentée.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 5 — OBJECTIFS -->
+  <section id="s5">
+    <div class="section-header">
+      <span class="section-number">05</span>
+      <h2 class="section-title">Objectifs RP</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="obj-list">
+      <div class="obj-item">
+        <span class="obj-num">I</span>
+        <p class="obj-text">Survivre à la vie de Los Santos tout en maintenant un semblant de contrôle sur son état mental. Ne pas s'effondrer — tenir.</p>
+      </div>
+      <div class="obj-item">
+        <span class="obj-num">II</span>
+        <p class="obj-text">Gérer ses pulsions et son trouble au sein du groupe de hooligans. Trouver dans ce chaos un exutoire acceptable qui ne le détruise pas.</p>
+      </div>
+      <div class="obj-item">
+        <span class="obj-num">III</span>
+        <p class="obj-text">Explorer ses limites dans le chaos urbain de Los Santos — sans sombrer totalement dans ce qu'il était au Mexique.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 6 — TONALITÉ -->
+  <section id="s6">
+    <div class="section-header">
+      <span class="section-number">06</span>
+      <h2 class="section-title">Tonalité RP</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">// Ambiance & style de jeu</div>
+      <p>
+        Emilio n'est pas un personnage de comédie ni un héros rédempteur. Son RP s'inscrit dans une noirceur assumée, avec des moments de lucidité qui rendent le tout humain — et donc encore plus perturbant. Il est dangereux parce qu'il est réel.
+      </p>
+    </div>
+    <div class="tonal-tags">
+      <div class="tonal-tag">Sombre</div>
+      <div class="tonal-tag">Imprévisible</div>
+      <div class="tonal-tag">Dangereux</div>
+      <div class="tonal-tag">Complexe</div>
+      <div class="tonal-tag">Contrôle fragile</div>
+      <div class="tonal-tag">Intense</div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">EMILIO ESTÉVEZ</div>
+  <div class="footer-info">GTA RP — Los Santos // Dossier personnage // File #0047-LS</div>
+</footer>
+
+<script>
+  // Intersection Observer for section reveal
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
